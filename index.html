@@ -237,7 +237,7 @@ alt="Header Workshop">
   // ============================================================
   // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
   // ============================================================
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec';
+  const SCRIPT_URL = 'GANTI URL INI DENGAN URL APPS SCRIPT ANDA';
   // ============================================================
 
   const canvas = document.getElementById('sigCanvas');
@@ -328,15 +328,17 @@ alt="Header Workshop">
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec';
 async function submitForm() {
+
     if (!validate()) {
         showToast('Mohon lengkapi semua kolom wajib', 'error');
         return;
     }
-    // lanjutkan proses submit...
-}
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
+
+    ...
+}
     document.getElementById('overlay').classList.add('show');
 
     // Format tanggal dari YYYY-MM-DD ke DD Bulan YYYY
