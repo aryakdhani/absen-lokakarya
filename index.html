@@ -237,7 +237,7 @@ alt="Header Workshop">
   // ============================================================
   // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
   // ============================================================
-  const SCRIPT_URL = 'PASTE_URL_APPS_SCRIPT_DISINI';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec';
   // ============================================================
 
   const canvas = document.getElementById('sigCanvas');
@@ -328,7 +328,7 @@ alt="Header Workshop">
 
   async function submitForm() {
     if (!validate()) { showToast('Mohon lengkapi semua kolom wajib', 'error'); return; }
-    if (SCRIPT_URL === 'PASTE_URL_APPS_SCRIPT_DISINI') { showToast('URL Apps Script belum diisi!', 'error'); return; }
+    if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec') { showToast('URL Apps Script belum diisi!', 'error'); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
