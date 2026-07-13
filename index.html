@@ -237,7 +237,7 @@ alt="Header Workshop">
   // ============================================================
   // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
   // ============================================================
-  const SCRIPT_URL = 'GANTI URL INI DENGAN URL APPS SCRIPT ANDA';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec';
   // ============================================================
 
   const canvas = document.getElementById('sigCanvas');
@@ -325,21 +325,14 @@ alt="Header Workshop">
     else sigCard.classList.remove('error');
     return valid;
   }
-
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec';
-async function submitForm() {
-
-    if (!validate()) {
-        showToast('Mohon lengkapi semua kolom wajib', 'error');
-        return;
-    }
+  async function submitForm() {
+    if (!validate()) { showToast('Mohon lengkapi semua kolom wajib', 'error'); return; }
+    if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec') { showToast('URL Apps Script belum diisi!', 'error'); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-
-    ...
-}
     document.getElementById('overlay').classList.add('show');
+
 
     // Format tanggal dari YYYY-MM-DD ke DD Bulan YYYY
     const rawDate = document.getElementById('tanggal').value;
