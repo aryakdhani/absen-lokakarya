@@ -326,9 +326,14 @@ alt="Header Workshop">
     return valid;
   }
 
-  async function submitForm() {
-    if (!validate()) { showToast('Mohon lengkapi semua kolom wajib', 'error'); return; }
-    if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec') { showToast('URL Apps Script belum diisi!', 'error'); return; }
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec';
+async function submitForm() {
+    if (!validate()) {
+        showToast('Mohon lengkapi semua kolom wajib', 'error');
+        return;
+    }
+    // lanjutkan proses submit...
+}
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
