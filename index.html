@@ -189,13 +189,14 @@ alt="Header Workshop">
   <div class="q-card" id="q-kontak">
     <div class="q-label">Nomor Telepon (<em>Phone Number</em>) <span class="req">*</span></div>
     <input class="text-field" type="tel" id="kontak" placeholder="Contoh: 08123456789" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-    <div class="err-msg">Nomor telepon wajib diisi dan hanya boleh angka.</div>
+    <div class="err-msg">Nomor telepon wajib diisi dengan format nomor HP Indonesia yang valid (contoh: 08123456789 atau 62812345678).</div>
   </div>
 
   <!-- Email -->
-  <div class="q-card">
+  <div class="q-card" id="q-email">
     <div class="q-label">Alamat Email (<em>Email Address</em>)</div>
     <input class="text-field" type="email" id="email" placeholder="Your answer" autocomplete="email" />
+    <div class="err-msg">Format email tidak valid (contoh: nama@contoh.com).</div>
   </div>
 
   <!-- Tanda Tangan -->
@@ -305,34 +306,61 @@ alt="Header Workshop">
     document.getElementById('q-sig').classList.remove('error');
   }
 
+  // Regex validasi
+  const PHONE_REGEX = /^(?:0|62)8[1-9][0-9]{6,11}$/; // contoh valid: 08123456789, 6281234567890
+  const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
   function validate() {
     let valid = true;
+
+    // Field wajib biasa (kosong = error)
     const checks = [
       { id: 'q-tanggal', val: () => document.getElementById('tanggal').value.trim() },
       { id: 'q-nama',    val: () => document.getElementById('nama').value.trim() },
       { id: 'q-gender',  val: () => document.querySelector('input[name=gender]:checked') },
       { id: 'q-org',     val: () => document.getElementById('org').value.trim() },
       { id: 'q-jabatan', val: () => document.getElementById('jabatan').value.trim() },
-      { id: 'q-kontak',  val: () => document.getElementById('kontak').value.trim() },
     ];
     checks.forEach(c => {
       const el = document.getElementById(c.id);
       if (!c.val()) { el.classList.add('error'); valid = false; }
       else el.classList.remove('error');
     });
+
+    // Nomor telepon: wajib diisi DAN harus sesuai format nomor HP Indonesia
+    const kontakCard = document.getElementById('q-kontak');
+    const kontakVal = document.getElementById('kontak').value.trim();
+    if (!kontakVal || !PHONE_REGEX.test(kontakVal)) {
+      kontakCard.classList.add('error');
+      valid = false;
+    } else {
+      kontakCard.classList.remove('error');
+    }
+
+    // Email: opsional, tapi kalau diisi harus format email yang valid
+    const emailCard = document.getElementById('q-email');
+    const emailVal = document.getElementById('email').value.trim();
+    if (emailVal && !EMAIL_REGEX.test(emailVal)) {
+      emailCard.classList.add('error');
+      valid = false;
+    } else {
+      emailCard.classList.remove('error');
+    }
+
+    // Tanda tangan
     const sigCard = document.getElementById('q-sig');
     if (!hasSig) { sigCard.classList.add('error'); valid = false; }
     else sigCard.classList.remove('error');
+
     return valid;
   }
+
   async function submitForm() {
-    if (!validate()) { showToast('Mohon lengkapi semua kolom wajib', 'error'); return; }
-    if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec') { showToast('URL Apps Script belum diisi!', 'error'); return; }
+    if (!validate()) { showToast('Mohon lengkapi semua kolom wajib dengan format yang benar', 'error'); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     document.getElementById('overlay').classList.add('show');
-
 
     // Format tanggal dari YYYY-MM-DD ke DD Bulan YYYY
     const rawDate = document.getElementById('tanggal').value;
