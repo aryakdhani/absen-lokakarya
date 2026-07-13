@@ -54,19 +54,6 @@
   .header-card .desc { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 6px; margin-top: 0.75rem; }
   .header-card .desc-en { font-size: 13px; color: var(--text-soft); font-style: italic; line-height: 1.6; }
 
-  .section-label {
-    background: var(--accent);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-bottom: 12px;
-  }
-
   .required-note { background: var(--card); border-radius: var(--radius); padding: 0.85rem 1.5rem; margin-bottom: 12px; font-size: 13px; color: var(--text-soft); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
   .required-note span { color: var(--required); }
 
@@ -83,6 +70,8 @@
   }
   .text-field:focus { border-bottom: 2px solid var(--accent); }
   .text-field::placeholder { color: #bdc1c6; }
+
+  input[type=date].text-field { padding: 8px 4px; cursor: pointer; }
 
   .radio-group { display: flex; flex-direction: column; gap: 4px; }
   .radio-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 4px; cursor: pointer; transition: background 0.1s; }
@@ -140,7 +129,7 @@
 
   <!-- Header -->
   <div class="header-card">
-    <img src="https://imgur.com/a/ZwjxeLN.jpeg" alt="Lokakarya Teknis Pengelolaan Perikanan Berbasis Masyarakat" />
+    <img src="https://i.imgur.com/QfDnnFa.png" alt="Lokakarya Teknis Pengelolaan Perikanan Berbasis Masyarakat" />
     <h1>Formulir Konfirmasi Peserta</h1>
     <div class="event-info">
       📅 Lokakarya Teknis Pengelolaan Perikanan Berbasis Masyarakat — Sesi Umpan Balik Data &nbsp;|&nbsp; 11–13 Agustus 2026 &nbsp;|&nbsp; Denpasar, Bali
@@ -154,12 +143,12 @@
   <!-- Tanggal Kehadiran -->
   <div class="q-card" id="q-tanggal">
     <div class="q-label">Tanggal Kehadiran (<em>Date of Attendance</em>) <span class="req">*</span></div>
-    <div class="radio-group">
-      <label class="radio-item"><input type="radio" name="tanggal" value="11 Agustus 2026" /><span>11 Agustus 2026 (Selasa)</span></label>
-      <label class="radio-item"><input type="radio" name="tanggal" value="12 Agustus 2026" /><span>12 Agustus 2026 (Rabu)</span></label>
-      <label class="radio-item"><input type="radio" name="tanggal" value="13 Agustus 2026" /><span>13 Agustus 2026 (Kamis)</span></label>
+    <input class="text-field" type="date" id="tanggal"
+           min="2026-08-11" max="2026-08-13" />
+    <div style="font-size:12px; color:var(--text-soft); margin-top:6px;">
+      Pilih antara 11–13 Agustus 2026
     </div>
-    <div class="err-msg">Tanggal kehadiran wajib dipilih.</div>
+    <div class="err-msg">Tanggal kehadiran wajib diisi.</div>
   </div>
 
   <!-- Nama -->
@@ -244,7 +233,7 @@
 
 <script>
   // ============================================================
-  // GANTI URL INI DENGAN URL APPS SCRIPT BARU
+  // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
   // ============================================================
   const SCRIPT_URL = 'PASTE_URL_APPS_SCRIPT_DISINI';
   // ============================================================
@@ -317,7 +306,7 @@
   function validate() {
     let valid = true;
     const checks = [
-      { id: 'q-tanggal', val: () => document.querySelector('input[name=tanggal]:checked') },
+      { id: 'q-tanggal', val: () => document.getElementById('tanggal').value.trim() },
       { id: 'q-nama',    val: () => document.getElementById('nama').value.trim() },
       { id: 'q-gender',  val: () => document.querySelector('input[name=gender]:checked') },
       { id: 'q-org',     val: () => document.getElementById('org').value.trim() },
@@ -337,14 +326,21 @@
 
   async function submitForm() {
     if (!validate()) { showToast('Mohon lengkapi semua kolom wajib', 'error'); return; }
-    if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw-OmdcQDdyrryhEvQMpMJ0RNNk1GWn2-qwcWYRNnAIVS444_kMNdNG5jUxWf-bxsEP7Q/exec') { showToast('URL Apps Script belum diisi!', 'error'); return; }
+    if (SCRIPT_URL === 'PASTE_URL_APPS_SCRIPT_DISINI') { showToast('URL Apps Script belum diisi!', 'error'); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     document.getElementById('overlay').classList.add('show');
 
+    // Format tanggal dari YYYY-MM-DD ke DD Bulan YYYY
+    const rawDate = document.getElementById('tanggal').value;
+    const bulan = ['Januari','Februari','Maret','April','Mei','Juni',
+                   'Juli','Agustus','September','Oktober','November','Desember'];
+    const [y, m, d] = rawDate.split('-');
+    const tanggalFormatted = d + ' ' + bulan[parseInt(m) - 1] + ' ' + y;
+
     const payload = {
-      tanggal:   document.querySelector('input[name=tanggal]:checked')?.value || '',
+      tanggal:   tanggalFormatted,
       nama:      document.getElementById('nama').value.trim(),
       gender:    document.querySelector('input[name=gender]:checked')?.value || '',
       org:       document.getElementById('org').value.trim(),
@@ -375,7 +371,8 @@
 
   function resetForm() {
     ['nama','org','jabatan','kontak','email'].forEach(id => document.getElementById(id).value = '');
-    document.querySelectorAll('input[name=gender], input[name=tanggal]').forEach(r => r.checked = false);
+    document.getElementById('tanggal').value = '';
+    document.querySelectorAll('input[name=gender]').forEach(r => r.checked = false);
     document.querySelectorAll('.q-card').forEach(c => c.classList.remove('error'));
     document.getElementById('submitBtn').disabled = false;
     clearSig();
